@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tilbud fra Vinmonopolet</string>
+    <string name="android_sax">Hent på nytt</string>
+    <string name="main_no_items">Ingen tilbud hentet. Sjekk internettilgang</string>
+</resources>
