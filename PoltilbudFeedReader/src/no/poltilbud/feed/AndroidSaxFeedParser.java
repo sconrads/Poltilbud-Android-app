@@ -1,5 +1,6 @@
 package no.poltilbud.feed;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import android.util.Xml;
 public class AndroidSaxFeedParser extends BaseFeedParser {
 
 	static final String RSS = "rss";
-	public AndroidSaxFeedParser(String feedUrl) {
-		super(feedUrl);
+	public AndroidSaxFeedParser(String feedUrl, InputStream localInputStream) {
+		super(feedUrl, localInputStream);
 	}
 
 	public List<Product> parse() {

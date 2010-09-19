@@ -1,5 +1,12 @@
 package no.poltilbud.feed;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +34,19 @@ public class ProductList extends ListActivity {
 	private ArrayList<Product> m_products = null;
 	private ProgressDialog m_ProgressDialog;
 	private ProductAdapter m_adapter;
+	private final String offerXMLFilename = "offersFromPoltilbud.xml";
 	
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(R.layout.main);
-        if (isOnline())
-        	loadFeed();
+        setContentView(R.layout.main);  
+        //loadFeed(false);
+        if (isOnline() && !offerFileExists()) {
+        	loadFeed(false);
+        }    	
+        else if (offerFileExists()) {
+        	loadFeed(true);
+		}
     }
     
 	@Override
@@ -53,7 +66,7 @@ public class ProductList extends ListActivity {
 		if (adapter.getCount() > 0){
 			adapter.clear();
 		}
-		this.loadFeed();
+		this.loadFeed(false);
 		return true;
 	}
 
@@ -65,36 +78,50 @@ public class ProductList extends ListActivity {
 		this.startActivity(viewMessage);
 	}
 
-	private void loadFeed(){
+	private void loadFeed(boolean useLocalXMLFile){
     	try{
-	    	final FeedParser parser = FeedParserFactory.getParser();
-	    	long start = System.currentTimeMillis();
+	    	final FeedParser parser;
+	    	if (useLocalXMLFile){
+	    		parser = FeedParserFactory.getParser(getLocalInputStream());
+	    	} else
+	    	{
+	    		parser = FeedParserFactory.getParser();
+	    	}
 	    	
 	    	m_products = new ArrayList<Product>();
 	        this.m_adapter = new ProductAdapter(this, R.layout.row, m_products);
 	                setListAdapter(this.m_adapter);
 	    	
 	    	Runnable viewProducts = new Runnable(){
-	            @Override
 	            public void run() {
+	            	long start = System.currentTimeMillis();
 	            	m_productsFromXML = parser.parse();	 
 	            	m_products = new ArrayList<Product>(m_productsFromXML.size());
 	    	    	for (Product msg : m_productsFromXML){
 	    	    		m_products.add(msg);
 	    	    	}
-	            	runOnUiThread(returnRes);
+	    	    	long duration = System.currentTimeMillis() - start;
+	    	    	Log.i("Poltilbud", "Parser duration=" + duration);
+	    	    	String xml = writeXml();
+	    	    	Log.i("Poltilbud", xml);
+	    	    	saveFileToFilesystem(xml);
+	    	    	Log.i("Poltilbud", "File written to filesystem");
+	            	runOnUiThread(returnRes);	            	
 	            }
 	        };
 		    Thread thread =  new Thread(null, viewProducts, "MagentoBackground");
 		        thread.start();
+		        
+		    String messageToUser = "";
+		    if (!useLocalXMLFile){
+		    	messageToUser = "Henter tilbud";
+		    } else
+		    {
+		    	messageToUser = "Henter tilbud fra lokalt buffer";
+		    }
 	        m_ProgressDialog = ProgressDialog.show(ProductList.this,    
-	              "Vennligst vent...", "Henter tilbud ...", true);
-	          		   
-	    	long duration = System.currentTimeMillis() - start;
-	    	Log.i("Poltilbud", "Parser duration=" + duration);
-	    	String xml = writeXml();
-	    	Log.i("Poltilbud", xml);
-	    	
+	              "Vennligst vent...", messageToUser, true);
+	
 	    	this.setListAdapter(m_adapter);
 	    	
     	} catch (Throwable t){
@@ -104,7 +131,6 @@ public class ProductList extends ListActivity {
 	
 	private Runnable returnRes = new Runnable() {
 
-        @Override
         public void run() {
             if(m_products != null && m_products.size() > 0){
                 m_adapter.notifyDataSetChanged();
@@ -122,23 +148,32 @@ public class ProductList extends ListActivity {
 		try {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", true);
-			serializer.startTag("", "messages");
-			serializer.attribute("", "number", String.valueOf(m_productsFromXML.size()));
+			serializer.startTag("", "rss");
+			serializer.startTag("", "channel");
+			
 			for (Product msg: m_productsFromXML){
-				serializer.startTag("", "message");
-				serializer.attribute("", "date", msg.getDate());
+				serializer.startTag("", "item");
+				
 				serializer.startTag("", "title");
 				serializer.text(msg.getTitle());
 				serializer.endTag("", "title");
-				serializer.startTag("", "url");
+				
+				serializer.startTag("", "link");
 				serializer.text(msg.getLink().toExternalForm());
-				serializer.endTag("", "url");
-				serializer.startTag("", "body");
+				serializer.endTag("", "link");
+				
+				serializer.startTag("", "description");
 				serializer.text(msg.getDescription());
-				serializer.endTag("", "body");
-				serializer.endTag("", "message");
+				serializer.endTag("", "description");	
+				
+				serializer.startTag("", "pubDate");
+				serializer.text(msg.getDate());
+				serializer.endTag("", "pubDate");	
+
+				serializer.endTag("", "item");
 			}
-			serializer.endTag("", "messages");
+			serializer.endTag("", "channel");
+			serializer.endTag("", "rss");
 			serializer.endDocument();
 			return writer.toString();
 		} catch (Exception e) {
@@ -146,11 +181,102 @@ public class ProductList extends ListActivity {
 		} 
 	}
 	
-	public boolean isOnline() {
+	private boolean isOnline() {
    	 ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
    	 if (cm.getActiveNetworkInfo() == null)
    		 return false;
    	 return cm.getActiveNetworkInfo().isConnectedOrConnecting();
 
    	}
+	
+	private void saveFileToFilesystem(String file){
+		
+		try { // catches IOException below	           
+	           
+	           // ##### Write a file to the disk #####
+	           /* We have to use the openFileOutput()-method
+	           * the ActivityContext provides, to
+	           * protect your file from others and
+	           * This is done for security-reasons.
+	           * We chose MODE_WORLD_READABLE, because
+	           * we have nothing to hide in our file */
+	           FileOutputStream fOut = openFileOutput(PoltilbudEnums.FILENAME,
+	           MODE_WORLD_READABLE);
+	           OutputStreamWriter osw = new OutputStreamWriter(fOut);
+	           
+	           // Write the string to the file
+	           osw.write(file);
+	           /* ensure that everything is
+	           * really written out and close */
+	           osw.flush();
+	           osw.close();
+	           // ##### Read the file back in #####
+	           
+	           
+	           // WOHOO lets Celebrate =)
+	           Log.i("Poltilbud", "File written ok");
+	           
+	       } catch (IOException ioe) {
+	           ioe.printStackTrace();
+	       }
+		
+	}
+	
+	private InputStream getLocalInputStream(){
+		
+		readXMLFile();
+		try {
+		    return openFileInput(PoltilbudEnums.FILENAME);		    
+		} catch (java.io.FileNotFoundException e) {
+			Log.i("Poltilbud", "File do not exists!");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private String readXMLFile(){
+		String offerXMLFile = new String();
+
+		try {
+		    // open the file for reading
+		    InputStream in = openFileInput(offerXMLFilename);
+		 
+		    // if file the available for reading
+		    if (in != null) {
+		      // prepare the file for reading
+		      InputStreamReader input = new InputStreamReader(in);
+		      BufferedReader buffreader = new BufferedReader(input);
+		      String str;
+		      StringBuffer stringBuffer = new StringBuffer();
+		      // read every line of the file into the line-variable, on line at the time
+		      while (( str = buffreader.readLine()) != null) {
+		        stringBuffer.append(str + "\n");
+		      }
+		      in.close();
+		      offerXMLFile = stringBuffer.toString();
+		      Log.i("Poltilbud", "XML file from local: " + offerXMLFile);
+		    }
+		    
+		    Log.i("Poltilbud", "File read");
+		    
+		} catch (java.io.FileNotFoundException e) {
+		  Log.i("Poltilbud", "File read");
+		  e.printStackTrace();		 
+	  	} catch (IOException e) {
+		  Log.i("Poltilbud", "File read");
+		  e.printStackTrace();		  
+		}
+
+		return offerXMLFile;
+	}
+	
+	private boolean offerFileExists(){
+		try {
+		    openFileInput(offerXMLFilename);
+		} catch (java.io.FileNotFoundException e) {
+		  return false;
+		}
+	  	return true;
+	}
+	
 }

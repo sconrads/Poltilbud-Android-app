@@ -16,10 +16,12 @@ public abstract class BaseFeedParser implements FeedParser {
 	static final  String ITEM = "item";
 	
 	private final URL feedUrl;
+	private InputStream localInputStream;
 
-	protected BaseFeedParser(String feedUrl){
+	protected BaseFeedParser(String feedUrl, InputStream localInputStream){
 		try {
 			this.feedUrl = new URL(feedUrl);
+			this.localInputStream = localInputStream;
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
@@ -27,7 +29,12 @@ public abstract class BaseFeedParser implements FeedParser {
 
 	protected InputStream getInputStream() {
 		try {
-			return feedUrl.openConnection().getInputStream();
+			if (this.localInputStream != null){
+				return this.localInputStream;
+			}
+			else {
+				return feedUrl.openConnection().getInputStream();
+			}						
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
