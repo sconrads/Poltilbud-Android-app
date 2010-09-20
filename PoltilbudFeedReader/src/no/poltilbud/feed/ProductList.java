@@ -1,7 +1,6 @@
 package no.poltilbud.feed;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +30,8 @@ import android.widget.ListView;
 public class ProductList extends ListActivity {
 	
 	private List<Product> m_productsFromXML = null;
+	private ParsedProducts m_parsedProducts = null;
+	private String m_pubDate = null;
 	private ArrayList<Product> m_products = null;
 	private ProgressDialog m_ProgressDialog;
 	private ProductAdapter m_adapter;
@@ -73,14 +74,14 @@ public class ProductList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent viewMessage = new Intent(Intent.ACTION_VIEW, 
+		Intent viewProduct = new Intent(Intent.ACTION_VIEW, 
 				Uri.parse(m_productsFromXML.get(position).getLink().toExternalForm()));
-		this.startActivity(viewMessage);
+		this.startActivity(viewProduct);
 	}
 
 	private void loadFeed(boolean useLocalXMLFile){
     	try{
-	    	final FeedParser parser;
+	    	final Parser parser;
 	    	if (useLocalXMLFile){
 	    		parser = FeedParserFactory.getParser(getLocalInputStream());
 	    	} else
@@ -95,10 +96,12 @@ public class ProductList extends ListActivity {
 	    	Runnable viewProducts = new Runnable(){
 	            public void run() {
 	            	long start = System.currentTimeMillis();
-	            	m_productsFromXML = parser.parse();	 
+	            	m_parsedProducts = parser.parse();
+	            	m_productsFromXML = m_parsedProducts.getProducts();	 
+	            	m_pubDate = m_parsedProducts.getDate();
 	            	m_products = new ArrayList<Product>(m_productsFromXML.size());
-	    	    	for (Product msg : m_productsFromXML){
-	    	    		m_products.add(msg);
+	    	    	for (Product prd : m_productsFromXML){
+	    	    		m_products.add(prd);
 	    	    	}
 	    	    	long duration = System.currentTimeMillis() - start;
 	    	    	Log.i("Poltilbud", "Parser duration=" + duration);
@@ -148,32 +151,44 @@ public class ProductList extends ListActivity {
 		try {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", true);
-			serializer.startTag("", "rss");
-			serializer.startTag("", "channel");
-			
-			for (Product msg: m_productsFromXML){
-				serializer.startTag("", "item");
+			serializer.startTag("", "poltilbud");			
+			for (Product product: m_productsFromXML){
+				serializer.startTag("", "product");
 				
-				serializer.startTag("", "title");
-				serializer.text(msg.getTitle());
-				serializer.endTag("", "title");
+				serializer.startTag("", "name");
+				serializer.text(product.getName());
+				serializer.endTag("", "name");
 				
-				serializer.startTag("", "link");
-				serializer.text(msg.getLink().toExternalForm());
-				serializer.endTag("", "link");
+				serializer.startTag("", "url");
+				serializer.text(product.getLink().toExternalForm());
+				serializer.endTag("", "url");
 				
-				serializer.startTag("", "description");
-				serializer.text(msg.getDescription());
-				serializer.endTag("", "description");	
+				serializer.startTag("", "type");
+				serializer.text(product.getType());
+				serializer.endTag("", "type");	
 				
-				serializer.startTag("", "pubDate");
-				serializer.text(msg.getDate());
-				serializer.endTag("", "pubDate");	
+				serializer.startTag("", "differance");
+				serializer.text(product.getDifferance());
+				serializer.endTag("", "differance");	
+				
+				serializer.startTag("", "differancePerc");
+				serializer.text(product.getDifferancePerc());
+				serializer.endTag("", "differancePerc");	
+				
+				serializer.startTag("", "newPrice");
+				serializer.text(product.getNewPrice());
+				serializer.endTag("", "newPrice");	
+				
+				serializer.startTag("", "oldPrice");
+				serializer.text(product.getOldPrice());
+				serializer.endTag("", "oldPrice");
 
-				serializer.endTag("", "item");
+				serializer.endTag("", "product");
 			}
-			serializer.endTag("", "channel");
-			serializer.endTag("", "rss");
+			serializer.startTag("", "pubDate");
+			serializer.text(m_pubDate);
+			serializer.endTag("", "pubDate");
+			serializer.endTag("", "poltilbud");
 			serializer.endDocument();
 			return writer.toString();
 		} catch (Exception e) {
@@ -191,29 +206,15 @@ public class ProductList extends ListActivity {
 	
 	private void saveFileToFilesystem(String file){
 		
-		try { // catches IOException below	           
-	           
-	           // ##### Write a file to the disk #####
-	           /* We have to use the openFileOutput()-method
-	           * the ActivityContext provides, to
-	           * protect your file from others and
-	           * This is done for security-reasons.
-	           * We chose MODE_WORLD_READABLE, because
-	           * we have nothing to hide in our file */
+		try {           
 	           FileOutputStream fOut = openFileOutput(PoltilbudEnums.FILENAME,
-	           MODE_WORLD_READABLE);
+	           MODE_PRIVATE);
 	           OutputStreamWriter osw = new OutputStreamWriter(fOut);
 	           
-	           // Write the string to the file
 	           osw.write(file);
-	           /* ensure that everything is
-	           * really written out and close */
 	           osw.flush();
 	           osw.close();
-	           // ##### Read the file back in #####
-	           
-	           
-	           // WOHOO lets Celebrate =)
+
 	           Log.i("Poltilbud", "File written ok");
 	           
 	       } catch (IOException ioe) {
@@ -238,17 +239,13 @@ public class ProductList extends ListActivity {
 		String offerXMLFile = new String();
 
 		try {
-		    // open the file for reading
 		    InputStream in = openFileInput(offerXMLFilename);
-		 
-		    // if file the available for reading
+
 		    if (in != null) {
-		      // prepare the file for reading
 		      InputStreamReader input = new InputStreamReader(in);
 		      BufferedReader buffreader = new BufferedReader(input);
 		      String str;
 		      StringBuffer stringBuffer = new StringBuffer();
-		      // read every line of the file into the line-variable, on line at the time
 		      while (( str = buffreader.readLine()) != null) {
 		        stringBuffer.append(str + "\n");
 		      }

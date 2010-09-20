@@ -2,85 +2,100 @@ package no.poltilbud.feed;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Product implements Comparable<Product>{
-	static SimpleDateFormat FORMATTER = 
-		new SimpleDateFormat("dd MMM yyyy HH:mm:ss Z");
-	private String title;
-	private URL link;
-	private String description;
-	private Date date;
+	private String name;
+	private URL url;
+	private String type;
+	private String differance;
+	private String differancePerc;
+	private String newPrice;
+	private String oldPrice;
 
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title.trim();
+	public void setName(String name) {
+		this.name = name.trim();
 	}
-	// getters and setters omitted for brevity 
+
 	public URL getLink() {
-		return link;
+		return url;
 	}
 	
 	public void setLink(String link) {
 		try {
-			this.link = new URL(link);
+			this.url = new URL(link);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public String getDescription() {
-		return description;
+	public String getType() {
+		return type;
 	}
 
-	public void setDescription(String description) {
-		this.description = description.trim();
+	public String getDifferance() {
+		return differance;
 	}
 
-	public String getDate() {
-		return FORMATTER.format(this.date);
+	public void setDifferance(String differance) {
+		this.differance = differance;
 	}
 
-	public void setDate(String date) {
-		// pad the date if necessary
-		while (!date.endsWith("00")){
-			date += "0";
-		}
-		try {
-			this.date = FORMATTER.parse(date.trim());
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+	public String getDifferancePerc() {
+		return differancePerc;
 	}
-	
+
+	public void setDifferancePerc(String differancePerc) {
+		this.differancePerc = differancePerc;
+	}
+
+	public String getNewPrice() {
+		return newPrice;
+	}
+
+	public void setNewPrice(String newPrice) {
+		this.newPrice = newPrice;
+	}
+
+	public String getOldPrice() {
+		return oldPrice;
+	}
+
+	public void setOldPrice(String oldPrice) {
+		this.oldPrice = oldPrice;
+	}
+
+	public void setType(String type) {
+		this.type = type.trim();
+	}
+
 	public Product copy(){
 		Product copy = new Product();
-		copy.title = title;
-		copy.link = link;
-		copy.description = description;
-		copy.date = date;
+		copy.name = name;
+		copy.url = url;
+		copy.type = type;
+		copy.differance = differance;
+		copy.differancePerc = differancePerc;
+		copy.type = type;
+		copy.newPrice = newPrice;
+		copy.oldPrice = oldPrice;
 		return copy;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Title: ");
-		sb.append(title);
-		sb.append('\n');
-		sb.append("Date: ");
-		sb.append(this.getDate());
+		sb.append(name);
 		sb.append('\n');
 		sb.append("Link: ");
-		sb.append(link);
+		sb.append(url);
 		sb.append('\n');
-		sb.append("Description: ");
-		sb.append(description);
+		sb.append("Type: ");
+		sb.append(type);
 		return sb.toString();
 	}
 
@@ -88,11 +103,11 @@ public class Product implements Comparable<Product>{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((differance == null) ? 0 : differance.hashCode());
 		result = prime * result
-				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((link == null) ? 0 : link.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
+				+ ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 	
@@ -105,25 +120,25 @@ public class Product implements Comparable<Product>{
 		if (getClass() != obj.getClass())
 			return false;
 		Product other = (Product) obj;
-		if (date == null) {
-			if (other.date != null)
+		if (differance == null) {
+			if (other.differance != null)
 				return false;
-		} else if (!date.equals(other.date))
+		} else if (!differance.equals(other.differance))
 			return false;
-		if (description == null) {
-			if (other.description != null)
+		if (type == null) {
+			if (other.type != null)
 				return false;
-		} else if (!description.equals(other.description))
+		} else if (!type.equals(other.type))
 			return false;
-		if (link == null) {
-			if (other.link != null)
+		if (url == null) {
+			if (other.url != null)
 				return false;
-		} else if (!link.equals(other.link))
+		} else if (!url.equals(other.url))
 			return false;
-		if (title == null) {
-			if (other.title != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!title.equals(other.title))
+		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}
@@ -131,6 +146,6 @@ public class Product implements Comparable<Product>{
 	public int compareTo(Product another) {
 		if (another == null) return 1;
 		// sort descending, most recent first
-		return another.date.compareTo(date);
+		return another.name.compareTo(name);
 	}
 }

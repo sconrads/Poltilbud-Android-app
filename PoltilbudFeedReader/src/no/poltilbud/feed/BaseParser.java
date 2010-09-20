@@ -5,20 +5,23 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public abstract class BaseFeedParser implements FeedParser {
+public abstract class BaseParser implements Parser {
 
 	// names of the XML tags
-	static final String CHANNEL = "channel";
-	static final String PUB_DATE = "pubDate";
-	static final  String DESCRIPTION = "description";
-	static final  String LINK = "link";
-	static final  String TITLE = "title";
-	static final  String ITEM = "item";
+	static final  String PUB_DATE = "pubDate";
+	static final  String PRODUCT = "product";
+	static final  String NAME = "name";
+	static final  String TYPE = "type";
+	static final  String DIFFERANCE = "differance";
+	static final  String DIFFERANCEPERC = "differancePerc";
+	static final  String NEWPRICE = "newPrice";
+	static final  String OLDPRICE = "oldPrice";
+	static final  String URL = "url";
 	
 	private final URL feedUrl;
 	private InputStream localInputStream;
 
-	protected BaseFeedParser(String feedUrl, InputStream localInputStream){
+	protected BaseParser(String feedUrl, InputStream localInputStream){
 		try {
 			this.feedUrl = new URL(feedUrl);
 			this.localInputStream = localInputStream;

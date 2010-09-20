@@ -13,9 +13,9 @@ class ProductAdapter extends ArrayAdapter<Product> {
 
     private List<Product> items;
 
-    public ProductAdapter(Context context, int textViewResourceId, List<Product> items) {
-            super(context, textViewResourceId, items);
-            this.items = items;
+    public ProductAdapter(Context context, int textViewResourceId, List<Product> products) {
+            super(context, textViewResourceId, products);
+            this.items = products;
     }
 
     @Override
@@ -30,9 +30,11 @@ class ProductAdapter extends ArrayAdapter<Product> {
                     TextView tt = (TextView) v.findViewById(R.id.toptext);
                     TextView bt = (TextView) v.findViewById(R.id.bottomtext);
                     if (tt != null) {
-                          tt.setText(o.getTitle());                            }
+                          tt.setText(o.getName());                            }
                     if(bt != null){
-                          bt.setText(o.getDescription());
+                          bt.setText(o.getType() + ", Nå " + o.getNewPrice() + ". Før " 
+                        		  + o.getOldPrice() + ". Ned " + o.getDifferance() + " (" 
+                        		  + o.getDifferancePerc() + "%)");
                     }
             }
             return v;
