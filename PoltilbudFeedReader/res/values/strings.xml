@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tilbud fra Vinmonopolet</string>
+    <string name="app_name">Prisjusteringer hos Vinmonopolet</string>
+    <string name="list_name">Produkter</string>
     <string name="android_sax">Hent på nytt</string>
-    <string name="main_no_items">Ingen tilbud hentet. Sjekk internettilgang</string>
+    <string name="main_no_items"></string>
+    
+    <string name="mainInfo">Hver måned justerer Vinmonopolet prisene sine. Mange produkter reduseres i pris. Prisen må være nedsatt med minst 5 prosent.</string>
+    <string name="beerButton">Øl</string>
+    <string name="redwineButton">Rødvin</string>
+    <string name="whitewhineButton">Hvitvin</string>
+    <string name="spiritButton">Brennevin</string>
+    <string name="rosewineButton">Rosevin</string>
+    <string name="champButton">Musserende vin</string>
+    <string name="fruitwineButton">Fruktvin</string>
+    <string name="strongwineButton">Sterkvin</string>
+    <string name="nonalchButton">Alkoholfritt</string>
+    <string name="fetchOffersButton">Hent tilbud på nytt</string>
+    <string name="TextFetchedDate">Tilbud hentet: </string>
+    
+    
 </resources>

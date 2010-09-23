@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/LinearLayout01" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+<TextView android:text="@string/mainInfo" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<Button android:text="@string/beerButton" android:id="@+id/beerButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/redwineButton" android:id="@+id/redwineButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/whitewhineButton" android:id="@+id/whitewhineButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/spiritButton" android:id="@+id/spiritButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/rosewineButton" android:id="@+id/rosewineButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/champButton" android:id="@+id/champButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/fruitwineButton" android:id="@+id/fruitwineButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/strongwineButton" android:id="@+id/strongwineButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/nonalchButton" android:id="@+id/nonalchButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+
+
+<TextView android:text="@+id/TextFetchedDate" android:id="@+id/TextFetchedDate" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<Button android:text="@string/fetchOffersButton" android:id="@+id/fetchOffersButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+</LinearLayout>

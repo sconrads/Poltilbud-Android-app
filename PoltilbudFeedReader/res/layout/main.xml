@@ -1,18 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:orientation="vertical"
-   android:layout_width="fill_parent"
-   android:layout_height="fill_parent"
-   android:background="#FFFFFF"
-   >
-<ListView
-    android:id="@+id/android:list"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    />
-<TextView
-    android:id="@+id/android:empty"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:text="@string/main_no_items"/>
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="wrap_content"
+android:orientation="vertical"
+android:layout_height="fill_parent">
+ <LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+    <Button android:text="@string/beerButton" android:id="@+id/beerButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+	<Button android:text="@string/redwineButton" android:id="@+id/redwineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+</LinearLayout>
+<LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+    <Button android:text="@string/whitewhineButton" android:id="@+id/whitewhineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/spiritButton" android:id="@+id/spiritButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+
+</LinearLayout>
+<LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+   <Button android:text="@string/rosewineButton" android:id="@+id/rosewineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/champButton" android:id="@+id/champButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+
+</LinearLayout>
+<LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+   <Button android:text="@string/fruitwineButton" android:id="@+id/fruitwineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/strongwineButton" android:id="@+id/strongwineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+
+</LinearLayout>
+<LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+   <Button android:text="@string/nonalchButton" android:id="@+id/nonalchButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+
+</LinearLayout>
+<LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+ 
+
+</LinearLayout>
+<LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+  <TextView android:text="@string/TextFetchedDate" android:id="@+id/TextFetchedDate" android:layout_width="300dip" android:layout_height="wrap_content"></TextView>
+  
+
+</LinearLayout>
+<LinearLayout
+          android:layout_width="300dip"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="bottom|left"
+        >
+  
+  <Button android:text="@string/fetchOffersButton" android:id="@+id/fetchOffersButton" android:layout_width="300dip" android:layout_height="50dip"></Button>
+
+</LinearLayout>
+
+
+
+
 </LinearLayout>

@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -40,13 +42,23 @@ public class ProductList extends ListActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(R.layout.main);  
-        //loadFeed(false);
-        if (isOnline() && !offerFileExists()) {
-        	loadFeed(false);
+        setContentView(R.layout.list);  
+        
+        Bundle extras = getIntent().getExtras();
+        String term = extras.getString("button");
+        Log.i("Poltilbud", "This button is pressed: " + term);
+        
+        if (isOnline() && term.equalsIgnoreCase(PoltilbudEnums.BUTTON_FETCHOFFERS)){
+        	loadFeed(false, term);
+        }
+        else if (!isOnline() && term.equalsIgnoreCase(PoltilbudEnums.BUTTON_FETCHOFFERS)){
+        	//melding og exit til main
+        }
+        else if (isOnline() && !offerFileExists()) {
+        	loadFeed(false, term);
         }    	
         else if (offerFileExists()) {
-        	loadFeed(true);
+        	loadFeed(true, term);
 		}
     }
     
@@ -67,7 +79,7 @@ public class ProductList extends ListActivity {
 		if (adapter.getCount() > 0){
 			adapter.clear();
 		}
-		this.loadFeed(false);
+		this.loadFeed(false, null);
 		return true;
 	}
 
@@ -79,7 +91,8 @@ public class ProductList extends ListActivity {
 		this.startActivity(viewProduct);
 	}
 
-	private void loadFeed(boolean useLocalXMLFile){
+	private void loadFeed(boolean useLocalXMLFile, String typeButton){
+		final String typeButtonStr = typeButton;
     	try{
 	    	final Parser parser;
 	    	if (useLocalXMLFile){
@@ -101,7 +114,34 @@ public class ProductList extends ListActivity {
 	            	m_pubDate = m_parsedProducts.getDate();
 	            	m_products = new ArrayList<Product>(m_productsFromXML.size());
 	    	    	for (Product prd : m_productsFromXML){
-	    	    		m_products.add(prd);
+	    	    		if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_BEER)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_BEER))
+		    	    			m_products.add(prd);
+	    	    		} else if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_REDWINE)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_REDWINE))
+		    	    			m_products.add(prd);
+	    	    		} else if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_WHITEWINE)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_WHITEWINE))
+		    	    			m_products.add(prd);
+	    	    		} else if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_ROSE)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_ROSEWINE))
+		    	    			m_products.add(prd);
+	    	    		} else if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_CHAMP)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_CHAMP))
+		    	    			m_products.add(prd);
+	    	    		} else if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_FRUITWINE)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_FUITWINE))
+		    	    			m_products.add(prd);
+	    	    		} else if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_SPRIRT)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_SPIRIT))
+		    	    			m_products.add(prd);
+	    	    		} else if (typeButtonStr != null && typeButtonStr.equals(PoltilbudEnums.BUTTON_NONALCH)){
+	    	    			if (prd.getType().equalsIgnoreCase(PoltilbudEnums.NO_NONALCH))
+		    	    			m_products.add(prd);
+	    	    		} else {
+	    	    			m_products.add(prd);
+	    	    		}
+	    	    		
 	    	    	}
 	    	    	long duration = System.currentTimeMillis() - start;
 	    	    	Log.i("Poltilbud", "Parser duration=" + duration);
@@ -216,6 +256,22 @@ public class ProductList extends ListActivity {
 	           osw.close();
 
 	           Log.i("Poltilbud", "File written ok");
+	           
+	           FileOutputStream fOut2 = openFileOutput(PoltilbudEnums.offerFetchedDate,
+	           MODE_PRIVATE);
+	           OutputStreamWriter osw2 = new OutputStreamWriter(fOut2);
+	           
+	           Date dateNow = new Date ();
+	           
+	           SimpleDateFormat dateformatYYYYMMDD = new SimpleDateFormat("ddMMyyyy");
+	    
+	           StringBuilder nowddMMyyyy = new StringBuilder( dateformatYYYYMMDD.format( dateNow ) );    
+
+	           osw2.write(nowddMMyyyy.toString());
+	           osw2.flush();
+	           osw2.close();
+
+	           Log.i("Poltilbud", "File date written ok");
 	           
 	       } catch (IOException ioe) {
 	           ioe.printStackTrace();
