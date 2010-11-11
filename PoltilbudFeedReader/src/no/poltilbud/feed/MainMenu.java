@@ -118,6 +118,7 @@ public class MainMenu extends Activity{
         	  Intent myIntent = new Intent(v.getContext(), ProductList.class);
         	  myIntent.putExtra(PoltilbudEnums.BUTTONEXTR, PoltilbudEnums.BUTTON_FETCHOFFERS);
               startActivityForResult(myIntent, 0);
+              updateOfferDate();
           }
         });
         
@@ -125,6 +126,12 @@ public class MainMenu extends Activity{
         dateFetchedText.append(offerDateFromFile());
         
     }
+	
+	private void updateOfferDate(){
+		TextView dateFetchedText = (TextView)this.findViewById(R.id.TextFetchedDate);
+		dateFetchedText.setText("");
+        dateFetchedText.append(offerDateFromFile());
+	}
 	
 	private String offerDateFromFile(){
 		String offerDate = new String();
@@ -142,6 +149,10 @@ public class MainMenu extends Activity{
 		      }
 		      in.close();
 		      offerDate = stringBuffer.toString();
+		      String offerDateDay = offerDate.substring(0, 2);
+		      String offerDateMonth = offerDate.substring(2, 4);
+		      String offerDateYear = offerDate.substring(4, 8);
+		      offerDate = offerDateDay + "." + offerDateMonth + "." + offerDateYear;
 		      Log.i("Poltilbud", "XML file from local: " + offerDate);
 		    }
 		    

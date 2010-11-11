@@ -1,88 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<TableLayout
 xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="wrap_content"
-android:orientation="vertical"
-android:layout_height="fill_parent">
- <LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
-    <Button android:text="@string/beerButton" android:id="@+id/beerButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
-	<Button android:text="@string/redwineButton" android:id="@+id/redwineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
-</LinearLayout>
-<LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
-    <Button android:text="@string/whitewhineButton" android:id="@+id/whitewhineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
-<Button android:text="@string/spiritButton" android:id="@+id/spiritButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000044">
+    
+<TableRow>
+  <TextView android:text="@string/TextFetched" android:id="@+id/TextFetched" ></TextView>      
+  <TextView android:text="@string/TextFetchedDate" android:id="@+id/TextFetchedDate" android:height="40dip"></TextView>
+</TableRow>
 
-</LinearLayout>
-<LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
-   <Button android:text="@string/rosewineButton" android:id="@+id/rosewineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
-<Button android:text="@string/champButton" android:id="@+id/champButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+<TextView android:text="@string/mainInfo" android:id="@+id/mainInfo" android:textStyle="bold"></TextView>
 
-</LinearLayout>
-<LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
-   <Button android:text="@string/fruitwineButton" android:id="@+id/fruitwineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
-<Button android:text="@string/strongwineButton" android:id="@+id/strongwineButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/fetchOffersButton" android:id="@+id/fetchOffersButton" android:textStyle="bold"></Button>
 
-</LinearLayout>
-<LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
-   <Button android:text="@string/nonalchButton" android:id="@+id/nonalchButton" android:layout_width="150dip" android:layout_height="wrap_content"></Button>
+<TextView android:text="@string/mainProd" android:id="@+id/mainProd" android:textStyle="bold"></TextView>
 
-</LinearLayout>
-<LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
- 
+ <TableRow>
+    <Button android:text="@string/beerButton" android:id="@+id/beerButton" android:width="150dip"></Button>
+	<Button android:text="@string/redwineButton" android:id="@+id/redwineButton" android:width="150dip"></Button>
+</TableRow>
 
-</LinearLayout>
-<LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
-  <TextView android:text="@string/TextFetchedDate" android:id="@+id/TextFetchedDate" android:layout_width="300dip" android:layout_height="wrap_content"></TextView>
+<TableRow>
+	<Button android:text="@string/whitewhineButton" android:id="@+id/whitewhineButton" android:width="150dip"></Button>
+	<Button android:text="@string/spiritButton" android:id="@+id/spiritButton" android:width="150dip"></Button>
+</TableRow>
+
+
+<TableRow>
+	<Button android:text="@string/rosewineButton" android:id="@+id/rosewineButton" android:width="150dip"></Button>
+	<Button android:text="@string/champButton" android:id="@+id/champButton" android:width="150dip"></Button>
+</TableRow>
+
+<TableRow>
+   <Button android:text="@string/fruitwineButton" android:id="@+id/fruitwineButton" android:width="150dip"></Button>
+   <Button android:text="@string/strongwineButton" android:id="@+id/strongwineButton" android:width="150dip"></Button>
+</TableRow>
+
+<TableRow>
+   <Button android:text="@string/nonalchButton" android:id="@+id/nonalchButton" ></Button>
+</TableRow>
+
+
+  
   
 
-</LinearLayout>
-<LinearLayout
-          android:layout_width="300dip"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="bottom|left"
-        >
-  
-  <Button android:text="@string/fetchOffersButton" android:id="@+id/fetchOffersButton" android:layout_width="300dip" android:layout_height="50dip"></Button>
-
-</LinearLayout>
 
 
 
 
-</LinearLayout>
+
+</TableLayout>

@@ -14,9 +14,11 @@ import java.util.List;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -52,7 +54,15 @@ public class ProductList extends ListActivity {
         	loadFeed(false, term);
         }
         else if (!isOnline() && term.equalsIgnoreCase(PoltilbudEnums.BUTTON_FETCHOFFERS)){
-        	//melding og exit til main
+        	AlertDialog alertDialog = new AlertDialog.Builder(ProductList.this).create();
+        	alertDialog.setTitle("Feil");
+        	alertDialog.setMessage("Ingen tilgang til internett");
+        	alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+        	      public void onClick(DialogInterface dialog, int which) {
+        	    	finish();
+        	    } });
+        	alertDialog.show();
+        	
         }
         else if (isOnline() && !offerFileExists()) {
         	loadFeed(false, term);
