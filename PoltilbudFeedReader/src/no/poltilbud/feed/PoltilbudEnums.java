@@ -24,13 +24,13 @@ public class PoltilbudEnums {
 	public static final String BUTTON_FETCHOFFERS = "fetchOffers";
 	
 	public static final String NO_WHITEWINE = "Hvitvin";
-	public static final String NO_REDWINE = "R√∏dvin";
-	public static final String NO_ROSEWINE = "Ros√©vin";
+	public static final String NO_REDWINE = "Rødvin";
+	public static final String NO_ROSEWINE = "Rosévin";
 	public static final String NO_CHAMP = "Musserende vin";
 	public static final String NO_FUITWINE = "Fruktvin";
 	public static final String NO_STRONGWINE = "Sterkvin";
 	public static final String NO_SPIRIT = "Brennevin";
-	public static final String NO_BEER = "√òl";
+	public static final String NO_BEER = "Øl";
 	public static final String NO_NONALCH = "Alkoholfritt";
 	
 	public static final String offerFetchedDate = "offersDate.xml";

@@ -97,7 +97,7 @@ public class ProductList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent viewProduct = new Intent(Intent.ACTION_VIEW, 
-				Uri.parse(m_productsFromXML.get(position).getLink().toExternalForm()));
+				Uri.parse(m_products.get(position).getLink().toExternalForm()));
 		this.startActivity(viewProduct);
 	}
 

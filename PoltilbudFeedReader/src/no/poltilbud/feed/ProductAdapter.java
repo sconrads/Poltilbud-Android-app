@@ -32,9 +32,9 @@ class ProductAdapter extends ArrayAdapter<Product> {
                     if (tt != null) {
                           tt.setText(o.getName());                            }
                     if(bt != null){
-                          bt.setText(o.getType() + ", NÃ¥ " + o.getNewPrice() + ". FÃ¸r " 
+                          bt.setText(o.getType() + ", NŒ " + o.getNewPrice() + ". F¿r " 
                         		  + o.getOldPrice() + ". Ned " + o.getDifferance() + " (" 
-                        		  + o.getDifferancePerc() + "%)");
+                        		  + o.getDifferancePerc() + "%)");                          
                     }
             }
             return v;
